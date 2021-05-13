@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h1>Getting server updates</h1>
+
+<div id="broadcastView"></div>
+
+<script>
+    if (typeof (EventSource) !== "undefined") {
+
+        var source = new EventSource("/sse/services/broadcast");
+        source.addEventListener('broadcast-message', function (e) {
+            document.getElementById("broadcastView").innerHTML += e.data + "<br>";
+            console.log(e.data);
+        }, false);
+
+        source.addEventListener('open', function (e) {
+            // Connection was opened.
+            console.log("broadcast connection open");
+        }, false);
+
+        source.addEventListener('error', function (e) {
+            console.log("error");
+            console.log(e);
+            if (e.readyState === EventSource.CLOSED) {
+                // Connection was closed.
+            }
+        }, false);
+
+    } else {
+        document.getElementById("result").innerHTML = "Sorry, your browser does not support server-sent events...";
+    }
+
+</script>
+</body>
+</html>
